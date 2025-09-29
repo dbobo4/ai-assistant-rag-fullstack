@@ -1,3 +1,18 @@
+// In the created ragdb database there are two schemas by default: drizzle and public.
+//
+// drizzle schema:
+// - Contains the __drizzle_migrations table.
+// - This table is used internally by Drizzle ORM to track which migrations
+//   have already been applied (id, hash, created_at columns).
+// - It is only for migration bookkeeping, not for application data.
+//
+// public schema:
+// - Contains the application tables defined in your schema files.
+// - Example: resources (id, content, created_at, updated_at)
+// - Example: embeddings (id, resource_id, content, embedding[vector])
+// - This is where the actual application data is stored and queried.
+
+
 import { sql } from "drizzle-orm";
 import { text, varchar, timestamp, pgTable } from "drizzle-orm/pg-core";
 import { createSelectSchema } from "drizzle-zod";

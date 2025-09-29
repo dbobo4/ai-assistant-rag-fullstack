@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: ankane/pgvector
+    container_name: rag_postgres
+    restart: unless-stopped
+    env_file:
+      - db.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: rag_pgadmin
+    restart: unless-stopped
+    env_file:
+      - db.env
+    # outside port 8080 (how I access it in the browser) → inside port 80 (the default port the program listens on inside the container).
+    # In Docker this mapping is special: Docker links these ports so that external clients (like a browser) 
+    # and other microservices inside Docker can communicate correctly with this service with each other automatically (Docker handles it).
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  app:
+    build: .
+    container_name: rag_app
+    restart: unless-stopped
+    env_file:
+      - app.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
