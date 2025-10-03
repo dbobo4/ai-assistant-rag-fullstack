@@ -1,0 +1,17 @@
+FROM continuumio/miniconda3
+
+WORKDIR /app
+
+# Create conda env
+COPY environment.yml .
+RUN conda env create -f environment.yml
+ENV PATH /opt/conda/envs/rag-uploader/bin:$PATH
+
+# Copy app
+COPY . .
+
+# Expose FastAPI
+EXPOSE 8000
+
+# Run FastAPI (uvicorn must be in environment.yml)
+CMD ["uvicorn", "upload_docs:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -3,6 +3,7 @@ import { openai } from '@ai-sdk/openai';
 import { convertToModelMessages, streamText, tool, UIMessage, stepCountIs, } from 'ai';
 import { z } from 'zod';
 import { findRelevantContent } from '@/lib/ai/embedding';
+import { createResourceRaw } from '@/lib/actions/resources';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -12,9 +13,14 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: openai('gpt-4o-mini'),
-    system: `You are a helpful assistant. Check your knowledge base before answering any questions.
-    Only respond to questions using information from tool calls.
-    if no relevant information is found in the tool calls, respond, "Sorry, I don't know."`,
+    system: `You are a domain-specialized Recipes Assistant.
+          Rules:
+          - Always call "getInformation" FIRST to retrieve relevant chunks from the knowledge base.
+          - Answer ONLY using information returned by tools. If nothing is relevant, say "Sorry, I don't know."
+          - Prefer step-by-step instructions. If ingredients are present in context, list them first, then steps.
+          - If multiple relevant chunks exist, synthesize them into one coherent answer. Avoid hallucination.
+          - If "source" or metadata is available, mention the recipe name or file in one line at the end.
+          Style: concise, practical, no fluff.`,
     messages: convertToModelMessages(messages),
     stopWhen: stepCountIs(5),
     tools: {
@@ -26,7 +32,7 @@ export async function POST(req: Request) {
             .string()
             .describe('the content or resource to add to the knowledge base'),
         }),
-        execute: async ({ content }) => createResource({ content }),
+        execute: async ({ content }) => createResourceRaw({ content }),
       }),
             getInformation: tool({
         description: `get information from your knowledge base to answer questions.`,

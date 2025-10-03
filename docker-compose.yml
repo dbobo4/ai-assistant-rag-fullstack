@@ -36,6 +36,20 @@ services:
       - "3000:3000"
     depends_on:
       - db
+    volumes:
+      - ./recipes:/app/recipes
+
+  uploader:
+    build:
+      context: ./uploader
+      dockerfile: dockerfile
+    container_name: rag_uploader
+    ports:
+      - "8000:8000"
+    depends_on:
+      - app
+    volumes:
+      - ./recipes:/app/recipes
 
 volumes:
   pgdata:

@@ -1,0 +1,20 @@
+name: rag-uploader
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - fastapi
+  - uvicorn
+  - libmagic
+  - python-magic
+  - pip
+  - pip:
+      - requests
+      - tqdm
+      - unstructured[md,html,pdf,docx]  # enable multiple partitioners
+      - markdown                        # for md
+      - pdfminer.six                    # PDF text extraction backend
+      - python-docx                     # DOCX support
+      - beautifulsoup4                  # HTML parsing
+      - lxml                            # HTML/XML parsing speed/robustness
