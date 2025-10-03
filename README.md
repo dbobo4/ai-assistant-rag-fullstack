@@ -201,3 +201,17 @@ saved "<file>", processed: <n> chunk(s).
 
 - Starter and original guide by **Vercel AI SDK** — https://ai-sdk.dev/cookbook/guides/rag-chatbot
 - This repo extends that starter; see commit history for authorship.
+
+## Screenshots
+
+### Uploading a document
+![Upload UI](pictures/1.jpg)
+
+### Successful processing
+![Processed confirmation](pictures/2.jpg)
+
+### pgAdmin view
+![Embeddings in database](pictures/3.jpg)
+
+### Chat with the assistant
+![Chat UI](pictures/4.jpg)
